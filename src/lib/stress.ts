@@ -34,7 +34,7 @@ export class FcStress extends IInputsBase{
     serviceName: FcStress.defaultServiceName,
     handler: 'index.handler',
     runtime: 'python3',
-    codeUri: path.join(__dirname, 'utils', 'stress_test'),
+    codeUri: path.join(__dirname, 'utils', 'stress_test', 'code.zip'),
     memorySize: 3072,
     timeout: 600,
     environmentVariables: {
