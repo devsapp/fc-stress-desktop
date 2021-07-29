@@ -1,10 +1,10 @@
-import FcStressComponent from '../src/index';
+import FcStressComponent from '../lib/index';
 
 const ins: FcStressComponent = new FcStressComponent();
 ins.start({
-  region: 'cn-shanghai',
+  region: 'cn-hangzhou',
   access: 'default',
-  url: 'https://xxx.cn-shanghai.fc.aliyuncs.com/2016-08-15/proxy/qianfeng-demo/node-http/',
+  url: 'http://todo-list.todo-list-service.xxx.cn-hangzhou.fc.devsapp.net',
   method: 'GET',
   payload: 'Hello Serverless',
   functionType: 'http',

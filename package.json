@@ -23,10 +23,10 @@
   },
   "scripts": {
     "start": "npm run watch",
-    "watch": "npm run doc && tsc -w",
+    "watch": "tsc -w",
     "publish": "npm run build && s cli platform publish",
     "build": "rm -r node_modules && rm package-lock.json && npm i && tsc",
-    "postbuild": "npm run doc && mkdir -p lib/lib/utils/stress_test && cd src/lib/utils/stress_test && zip -r -q ../../../../lib/lib/utils/stress_test/code.zip ./",
+    "postbuild": "mkdir -p lib/lib/utils/stress_test && cd src/lib/utils/stress_test && zip -r -q ../../../../lib/lib/utils/stress_test/code.zip ./",
     "doc": "npx typedoc src/index.ts --json doc/doc.json --out doc"
   },
   "dependencies": {
