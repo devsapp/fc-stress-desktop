@@ -54,6 +54,7 @@ export class FcClient {
     prop.code = {
       zipFile: await fse.readFile(zipFilePath, 'base64'),
     };
+    delete prop.codeUri;
 
     try {
       await this.client.updateFunction(serviceName, functionName, prop);
