@@ -5,7 +5,6 @@ import * as path from 'path';
 import os from 'os';
 import * as fse from 'fs-extra';
 import { packTo } from './zip';
-import StdoutFormatter from './component/stdout-formatter';
 
 export class FcClient {
   private readonly client: any;
@@ -27,14 +26,12 @@ export class FcClient {
   async makeService(prop: any): Promise<any> {
     const { serviceName } = prop;
     try {
-      logger.debug(StdoutFormatter.stdoutFormatter.create('service', serviceName));
       await this.client.createService(serviceName, prop);
     } catch (ex) {
       if (ex.code !== 'ServiceAlreadyExists') {
         logger.debug(`Creating service error, ex code: ${ex.code}, ex: ${ex.message}`);
         throw ex;
       }
-      logger.debug(StdoutFormatter.stdoutFormatter.update('service', serviceName));
       await this.client.updateService(serviceName, prop);
     }
   }
@@ -44,7 +41,7 @@ export class FcClient {
       return codeUri;
     }
     const cacheDir: string = path.join(os.homedir(), '.s', 'cache', 'fc-stress', 'code');
-    await fse.ensureDir(cacheDir);
+    await fse.mkdirp(cacheDir);
     const zipFilePath: string = path.join(cacheDir, `${this.accountID}-${this.region}-${serviceName}-${functionName}.zip`);
     await packTo(codeUri, null, zipFilePath);
     return zipFilePath;
@@ -53,18 +50,16 @@ export class FcClient {
   async makeFunction(prop: any): Promise<any> {
     const { serviceName, functionName, codeUri } = prop;
     const zipFilePath: string = await this.makeFunctionCode(serviceName, functionName, codeUri);
-    logger.debug(`Zip code file path: ${zipFilePath}`);
+    logger.info(`Zip code file path: ${zipFilePath}`);
     prop.code = {
       zipFile: await fse.readFile(zipFilePath, 'base64'),
     };
 
     try {
-      logger.debug(StdoutFormatter.stdoutFormatter.update('function', `${serviceName}/${functionName}`));
       await this.client.updateFunction(serviceName, functionName, prop);
     } catch (ex) {
       if (ex.code === 'FunctionNotFound') {
         prop.functionName = functionName;
-        logger.debug(StdoutFormatter.stdoutFormatter.create('function', `${serviceName}/${functionName}`));
         await this.client.createFunction(serviceName, prop);
         return;
       }
